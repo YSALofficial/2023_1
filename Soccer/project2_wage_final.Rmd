@@ -1,0 +1,497 @@
+---
+title: "project2_wage"
+output: html_document
+date: "2023-06-04"
+---
+
+```{r}
+library(tidyverse)
+
+main <- function(dir_path){
+  # (1) directory
+  src_dir = dir_path
+  
+  # (2) make a file list of all files in the folder
+  src_file <- list.files(dir_path)
+  
+  # (3) count the number of files in the directory => object
+  src_file_cnt <- length(src_file)
+  
+  data_fw <- list()
+  data_mf <- list()
+  data_df <- list()
+  data_gk <- list()
+  
+  for (i in 1:src_file_cnt){
+    file_path <- file.path(src_dir, src_file[i])
+    data <- read.table(file_path, sep = ",", header = TRUE, fileEncoding = "euc-kr", fill = TRUE)
+    
+    if(grepl(src_file[i], "fw")){
+      data_fw <- c(data_fw, list(data))
+    } else if(grepl(src_file[i], "mf")){
+      data_mf <- c(data_mf, list(data))
+    } else if(grepl(src_file[i], "df")){
+      data_df <- c(data_df, list(data))
+    } else {
+      data_gk <- c(data_gk, list(data))
+    }
+  }
+  
+  datafw <- do.call(rbind, data_fw)
+  datamf <- do.call(rbind, data_mf)
+  datadf <- do.call(rbind, data_df)
+  datagk <- do.call(rbind, data_gk)
+  
+  result <- list(datafw = datafw, datamf = datamf, datadf = datadf, datagk = datagk)
+  
+  return(result)
+}
+
+main2 <- function(dir_path){
+  # (1) directory
+  src_dir = dir_path
+
+
+  # (2) make a file list of all files in the folder
+  src_file <- list.files(dir_path)
+
+  # (3) count the number of files in the directory => object
+  src_file_cnt <- length(src_file)
+  
+  for (i in 1:src_file_cnt){
+    assign(paste0("data_",src_file[i]),read.table(paste0(src_dir, "/", src_file[i]),sep = ",",header =TRUE,fileEncoding = "euc-kr",fill = TRUE))
+
+    if(i==1){
+      if(grepl(src_file[i], "fw")){
+        data_fw = get(paste0("data_", src_file[i]))
+      } else if(grepl(src_file[i], "mf")){
+        data_mf = get(paste0("data_", src_file[i]))
+      } else if(grepl(src_file[i],"df")){
+        data_df = get(paste0("data_", src_file[i]))
+      } else {
+        data_gk = get(paste0("data_", src_file[i]))
+      }
+    } else {
+      if(grepl(src_file[i], "fw")){
+        data_fw = rbind(data_fw,get(paste0("data_", src_file[i])))
+      } else if(grepl(src_file[i], "mf")){
+        data_mf = rbind(data_mf,get(paste0("data_", src_file[i])))
+      } else if(grepl(src_file[i],"df")){
+        data_df = rbind(data_df,get(paste0("data_", src_file[i])))
+      } else {
+        data_gk = rbind(data_gk,get(paste0("data_", src_file[i])))
+      }
+    }
+      
+  }
+  
+  assign('datafw' = data_fw)
+  assign('datamf' = data_mf)
+  assign('datadf' = data_df)
+  assign('datagk' = data_gk)
+}
+
+
+```
+
+```{r}
+main3 <- function(dir_path){
+  # (1) directory
+  src_dir = dir_path
+
+
+  # (2) make a file list of all files in the folder
+  src_file <- list.files(dir_path)
+
+  # (3) count the number of files in the directory => object
+  src_file_cnt <- length(src_file)
+  
+  for (i in 1:src_file_cnt){
+    assign(paste0("data_",src_file[i]), read.table(paste0(src_dir, "/", src_file[i]), sep = ",", header =TRUE, fileEncoding = "euc-kr", fill = TRUE))
+    }
+      
+}
+
+```
+
+```{r}
+main4 <- function(dir_path) {
+  # (1) directory
+  src_dir <- dir_path
+  
+  # (2) make a file list of all files in the folder
+  src_file <- list.files(dir_path)
+  
+  # (3) count the number of files in the directory => object
+  src_file_cnt <- length(src_file)
+  
+  data_list <- list()
+  
+  for (i in 1:src_file_cnt) {
+    file_path <- file.path(src_dir, src_file[i])
+    data <- read.table(file_path, sep = ",", header = TRUE, fileEncoding = "euc-kr")
+    data_list[[paste0("data_", src_file[i])]] <- data
+  }
+  
+  return(data_list)
+}
+```
+
+
+```{r}
+main("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+```
+
+```{r}
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+temp = read.table("liverpool_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+
+brighton_fw = read.table("brighton_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+brighton_mf = read.table("brighton_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+brighton_df = read.table("brighton_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+AstonVilla_fw = read.table("Aston Villa_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+AstonVilla_mf = read.table("Aston Villa_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+AstonVilla_df = read.table("Aston Villa_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Tottenham_fw = read.table("Tottenham_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Tottenham_mf = read.table("Tottenham_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Tottenham_df = read.table("Tottenham_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Brentford_fw = read.table("Brentford_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Brentford_mf = read.table("Brentford_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Brentford_df = read.table("Brentford_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Fulham_fw = read.table("Fulham_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Fulham_mf = read.table("Fulham_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Fulham_df = read.table("Fulham_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+
+Nottingham_fw = read.table("Nottingham_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Nottingham_mf = read.table("Nottingham_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Nottingham_df = read.table("Nottingham_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Everton_fw = read.table("Everton_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Everton_mf = read.table("Everton_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Everton_df = read.table("Everton_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Leicester_fw = read.table("Leicester_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Leicester_mf = read.table("Leicester_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Leicester_df = read.table("Leicester_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Leeds_fw = read.table("Leeds_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Leeds_mf = read.table("Leeds_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Leeds_df = read.table("Leeds_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Southampton_fw = read.table("Southampton_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Southampton_mf = read.table("Southampton_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Southampton_df = read.table("Southampton_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+CrystalPalace_fw = read.table("Crystal Palace_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+CrystalPalace_mf = read.table("Crystal Palace_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+CrystalPalace_df = read.table("Crystal Palace_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Chelsea_fw = read.table("Chelsea_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Chelsea_mf = read.table("Chelsea_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Chelsea_df = read.table("Chelsea_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Wolverhampton_fw = read.table("Wolverhampton-Wanderers_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Wolverhampton_mf = read.table("Wolverhampton-Wanderers_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Wolverhampton_df = read.table("Wolverhampton-Wanderers_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Westham_fw = read.table("West-Ham-United_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Westham_mf = read.table("West-Ham-United_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Westham_df = read.table("West-Ham-United_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+Bournemouth_fw = read.table("Bournemouth_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Bournemouth_mf = read.table("Bournemouth_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+Bournemouth_df = read.table("Bournemouth_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+mancity_fw = read.table("mancity_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+mancity_mf = read.table("mancity_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+mancity_df = read.table("mancity_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+arsenal_fw = read.table("arsenal_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+arsenal_mf = read.table("arsenal_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+arsenal_df = read.table("arsenal_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+manunited_fw = read.table("manu_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+manunited_mf = read.table("manu_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+manunited_df = read.table("manu_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+newcastle_fw = read.table("newcastle_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+newcastle_mf = read.table("newcastle_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+newcastle_df = read.table("newcastle_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+
+liverpool_fw = read.table("liverpool_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+liverpool_mf = read.table("liverpool_mf_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+liverpool_df = read.table("liverpool_df_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+library(tidyverse)
+manunited_fw %>% mutate(Wages = as.numeric(gsub(",", "", Wages))) %>%
+  lm('Wages~Age+MP',na.action=na.exclude, data=.)
+
+```
+
+```{r}
+get("manunited_fw")
+```
+
+```{r}
+data_sum <- function(list) {
+  
+  for(i in 1:length(list)){
+    if(i==1){
+      temp = get(list[i])
+    } else {
+      temp = rbind(temp, get(list[i]))
+    }
+  }
+  return(temp)
+}
+```
+
+
+```{r}
+rm(list=ls())
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+#
+# 팀 데이터 가져오는거
+#
+datalist = ls()
+
+data_sum <- function(list) {
+  
+  for(i in 1:length(list)){
+    if(i==1){
+      temp = get(list[i])
+    } else {
+      temp2 = get(list[i])
+      colnames(temp2) = colnames(temp)
+      temp = rbind(temp, temp2)
+    }
+  }
+  return(temp)
+}
+
+sum_data = data_sum(datalist)
+```
+
+```{r}
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+mancity_fw = read.table("mancity_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+liverpool_fw = read.table("liverpool_fw_final.csv" , fileEncoding = "euc-kr", header = TRUE, fill = TRUE, sep=",")
+```
+
+```{r}
+data2 = data_sum(datalist)
+```
+
+
+```{r}
+rm(list=ls())
+setwd("/Users/jaeheeso/Desktop/project2_2023-1/csv")
+#
+# 팀 데이터 가져오는거
+#
+datalist = ls()
+
+data_sum <- function(list) {
+  
+  for(i in 1:length(list)){
+    if(i==1){
+      temp = get(list[i])
+    } else {
+      temp2 = get(list[i])
+      colnames(temp2) = colnames(temp)
+      temp = rbind(temp, temp2)
+    }
+  }
+  return(temp)
+}
+
+sum_data = data_sum(datalist)
+```
+
+```{r}
+sum_data_fw_naout %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) %>%
+  lm('Wages~.-Player-Nation-Pos',na.action=na.exclude, data=.) %>%
+  summary()
+```
+
+```{r}
+sum_data_fw %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) %>%
+  lm('Wages~Gls+Ast+xG+npxG+xAG+PrgC+Sh+SoT+PPA+Succ',na.action=na.exclude, data=.) %>%
+  summary()
+```
+
+```{r}
+sum_data_fw %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) -> fw_data
+
+forw = lm('Wages~1',data = fw_data,na.action=na.exclude)
+back = lm('Wages~.-Player-Pos-Nation',data = fw_data,na.action=na.exclude)
+step(forw, direction="forward",scope = list(lower=forw, upper=back))
+```
+
+```{r}
+
+sum_data_fw %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) -> fw_data
+
+#live.1 = Ball touch
+lm(formula = Wages ~ npxG.xAG + Age + Mis + Cmp. + MP + 
+    Live.1 + TO.1 + Sh.2 + Tkld + TI + Sh.90 + TO + Cmp + PrgR + 
+    FK + Att + Att.Pen + Att.5 + Starts + Out + TotDist + PPA + 
+    Blocks + PrgDist.1 + Str + A.xAG + Ast.1 + Def.1, data = fw_data, 
+    na.action = na.exclude) ->fw_res
+```
+
+
+```{r}
+
+sum_data_fw %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) -> fw_data
+
+#live.1 = Ball touch
+lm(formula = Wages ~ npxG.xAG + Age + Mis + Cmp. + MP + 
+    Live.1 + TO.1 + Sh.2 + Tkld + TI + Sh.90 + TO + Cmp + PrgR + 
+    FK + Att + Att.Pen + Att.5 + Starts + Out + TotDist + PPA + 
+    Blocks + PrgDist.1 + Str + A.xAG + Ast.1 + Def.1, data = fw_data, 
+    na.action = na.exclude) ->fw_res
+
+summary(fw_res)
+```
+
+```{r}
+fw_data %>% select(-Player,-Pos, -Nation, -Wages ,npxG.xAG,Age , Mis ,Cmp. , MP , 
+    Live.1 , TO.1 , Sh.2 , Tkld , TI , Sh.90,  TO , Cmp , PrgR , 
+    FK , Att , Att.Pen,  Att.5 , Starts , Out , TotDist , PPA , 
+    Blocks , PrgDist.1 , Str , A.xAG , Ast.1 , Def.1) -> sum_data_fw_3
+prcomp(sum_data_fw_3, center = T, scale. = T) -> pca_fw2
+summary(pca_fw2)
+
+
+```
+
+```{r}
+prc2 = as.matrix(sum_data_fw_3) %*% pca_fw2$rotation
+fw_data %>%  select(Wages) -> fw_data_pca2
+
+train2 <- cbind(fw_data_pca2,as.data.frame(prc2))
+
+lm_pca = lm('Wages~PC1+PC2+PC3+PC4+PC5+PC6+PC7+PC8+PC9+PC10+PC11+PC12+PC13+PC14+PC15+PC16+PC17+PC18',data=train2)
+```
+
+```{r}
+summary(lm_pca)
+summary(pca_fw)
+```
+
+
+
+```{r}
+library(car)
+vif(fw_res)
+```
+
+
+```{r}
+sum_data_df %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) -> df_data
+
+#forw = lm('Wages~1',data = df_data,na.action=na.exclude)
+#back = lm('Wages~.-Player-Pos-Nation',data = df_data,na.action=na.exclude)
+#step(forw, direction="forward",scope = list(lower=forw, upper=back))
+```
+
+```{r}
+lm(formula = Wages ~ Cmp..1 + xAG.1  + Age + 
+    xG + Sh.90  + CK + Sw+ FK + 
+    Att.Pen + Att.6 + X01월.03일.1 + 
+    Att.3rd + CrdR + Blocks  + TklW + Clr +  Carries + Dis + Succ. , data = df_data, na.action = na.exclude) -> df_res
+```
+
+
+```{r}
+lm(formula = Wages ~ Cmp..1 + xAG.1 + KP + Age + TotDist.1 + 
+    xG + Sh.90 + Cmp. + PrgDist.1 + In + CK + Sw + Cmp.3 + FK + 
+    Att.Pen + Att.6 + X01월.03일.1 + PrgP + X01월.03일 + 
+    Att.3rd + CrdR + Blocks + Starts + Def.3rd.1 + TklW + Clr + 
+    Cmp..2 + Carries + Dis + Succ. + Cmp, data = df_data, na.action = na.exclude) ->df_res2
+```
+
+```{r}
+library(car)
+vif(df_res)
+vif(df_res2)
+```
+
+
+```{r}
+df_res2 %>% summary()
+```
+```{r}
+df_coeff = df_res2$coefficients
+df_coeff2 = df_res$coefficients
+```
+
+
+
+```{r}
+sum_data_mf %>% na.omit() %>%
+  mutate(Wages = as.numeric(gsub(",", "", Wages))) -> mf_data
+
+
+lm(formula = Wages ~ xAG.1 + Age + Cmp. + A.xAG + Sh.2 + Clr + 
+    MP + X01월.03일.1 + TO + CrdR + Cmp..3 + SoT. + Mid.3rd + 
+    Sw + PrgR + Mis + Dist + Att.6 + Def.1 + Ast.1 + Mid.3rd.1 + 
+    Cmp + X90s + G.PK + X01월.03일 + PrgDist + Off + G.A + 
+    PPA + xA + PassDead.1 + FK + Fld.1 + Cmp.2 + G.A.PK + npxG.Sh + 
+    In + KP + Tkld + Cmp..2 + Tkl. + Cmp..1 + TO.1 + GCA90 + 
+    xG.1 + G.Sh + SoT + Sh.3 + Def.3rd.1 + Att.3rd + Fld + Min + 
+    Ast + Int + Dis + PrgDist.1 + GCA + Err + Def + Succ + Att.1 + 
+    PKatt + TB + TotDist.1 + TotDist + CK + SCA90 + FK.1 + Cmp.1 + 
+    Out + Cmp.3 + G.PK.1 + CrdY + Lost + TI + Def.Pen + PassDead + 
+    Str + TklW + xG.xAG + Succ. + Sh.90 + CPA + Starts + Live + 
+    npxG.1, data = mf_data, na.action = na.exclude) -> mf_res
+```
+
+```{r}
+mf_res%>% summary()
+```
+
+```{r}
+kim = c(1, 94.1, 0.06, 10, 26,8608, 1, 0.24,90.8,4964,0,0,30,214,0,27,7,21,169,201,1,0,15,35,1329,30,123,94.2, 1942,7,57.1,2552)
+length(kim)
+length(df_coeff)
+sum(df_coeff*kim)
+df_coeff*kim
+```
+
+```{r}
+kim2 = c(1, 94.1, 1.9,26,1.0,0.24,0,30,49,27,295,21,1,0,15,30,123,1942,7,4)
+length(kim2)
+length(df_coeff2)
+sum(df_coeff2*kim2)
+
+```
+
